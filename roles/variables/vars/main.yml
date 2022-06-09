@@ -103,7 +103,7 @@ kafka_broker:
   systemd_file_src: "{{systemd_base_dir}}/{{kafka_broker_service_name_default}}.service"
 
   systemd_override: /etc/systemd/system/{{kafka_broker_service_name}}.service.d/override.conf
-  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}{{config_prefix}}/kafka/log4j.properties"
+  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/kafka/log4j.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/kafka/kafka_server_jaas.conf"
   rest_proxy_password_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/kafka/password.properties"
   datadir:
