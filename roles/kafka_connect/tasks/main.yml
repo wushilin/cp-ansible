@@ -196,6 +196,12 @@
   tags:
     - filesystem
 
+- name: Copy Log4j conf file
+  copy:
+    src: "{{kafka_connect.log4j_file_src}}"
+    dest: "{{kafka_connect.log4j_file}}"
+    mode: 0640
+
 - name: Update Connect log4j Config for Log Cleanup
   include_role:
     name: common
@@ -209,6 +215,7 @@
   when: kafka_connect_custom_log4j|bool
   tags:
     - configuration
+
 
 - name: Set Permissions on Log4j Conf
   file:

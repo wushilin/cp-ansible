@@ -216,6 +216,12 @@
   tags:
     - filesystem
 
+- name: Copy Log4j conf file
+  copy:
+    src: "{{control_center.log4j_file_src}}"
+    dest: "{{control_center.log4j_file}}"
+    mode: 0640
+
 - name: Update log4j Config for Log Cleanup
   include_role:
     name: common
