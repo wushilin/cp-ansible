@@ -9,7 +9,9 @@ confluent_repo_version: "{{ confluent_package_version | regex_replace('^([0-9])\
 ssl_file_dir_final: "{{ ssl_file_dir |regex_replace('\\/$', '') }}"
 
 #### Zookeeper Variables ####
-zookeeper_service_name: "{{ confluent-zookeeper | default('confluent-zookeeper' )}}
+zookeeper_service_name_default: "{{ confluent-zookeeper | default('confluent-zookeeper' )}}
+zookeeper_service_name_default_value_with_suffix: "{{zookeeper_service_name_default}}{{installation_suffix}}"
+zookeeper_service_name: "{{zookeeper_service_name_default_value_with_suffix}}"
 zookeeper_main_package: "{{ 'confluent-server' if confluent_server_enabled|bool else 'confluent-kafka'}}"
 zookeeper_default_user: cp-kafka
 zookeeper_default_group: confluent
@@ -87,7 +89,8 @@ zookeeper_final_properties: "{{ zookeeper_combined_properties | combine(zookeepe
 
 #### Kafka Broker Variables ####
 kafka_broker_service_name_default_value: "{{ 'confluent-server' if confluent_server_enabled|bool else 'confluent-kafka'}}"
-kafka_broker_service_name: "{{ kafka_broker_service_name_default | default(kafka_broker_service_name_default_value) }}"
+kafka_broker_service_name_default_value_with_suffix: "{{kafka_broker_service_name_default_value}}{{installation_suffix}}"
+kafka_broker_service_name: "{{ kafka_broker_service_name_default_value_with_suffix }}"
 kafka_broker_main_package: "{{ 'confluent-server' if confluent_server_enabled|bool else 'confluent-kafka'}}"
 kafka_broker_default_user: cp-kafka
 kafka_broker_default_group: confluent
