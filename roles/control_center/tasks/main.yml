@@ -218,7 +218,8 @@
 
 - name: Copy Log4j conf file
   copy:
-    remote_src: "{{control_center.log4j_file_src}}"
+    src: "{{control_center.log4j_file_src}}"
+    remote_src: true
     dest: "{{control_center.log4j_file}}"
     mode: 0640
 

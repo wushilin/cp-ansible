@@ -232,7 +232,8 @@
 
 - name: Copy Log4j conf file
   copy:
-    remote_src: "{{kafka_broker.log4j_file_src}}"
+    src: "{{kafka_broker.log4j_file_src}}"
+    remote_src: true
     dest: "{{kafka_broker.log4j_file}}"
     mode: 0640
 

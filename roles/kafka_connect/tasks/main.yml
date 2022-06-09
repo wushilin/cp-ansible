@@ -198,7 +198,8 @@
 
 - name: Copy Log4j conf file
   copy:
-    remote_src: "{{kafka_connect.log4j_file_src}}"
+    src: "{{kafka_connect.log4j_file_src}}"
+    remote_src: true
     dest: "{{kafka_connect.log4j_file}}"
     mode: 0640
 

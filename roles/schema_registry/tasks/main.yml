@@ -186,7 +186,8 @@
 
 - name: Copy Log4j conf file
   copy:
-    remote_src: "{{schema_registry.log4j_file_src}}"
+    src: "{{schema_registry.log4j_file_src}}"
+    remote_src: true
     dest: "{{schema_registry.log4j_file}}"
     mode: 0640
 
