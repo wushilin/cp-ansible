@@ -104,7 +104,7 @@ kafka_broker:
 
   systemd_override: /etc/systemd/system/{{kafka_broker_service_name}}.service.d/override.conf
   log4j_file_src: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/kafka/log4j.properties"
-  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent{% endif %}{{config_prefix}}/kafka/log4j.properties"
+  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}{% endif %}{{config_prefix}}/kafka/log4j.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/kafka/kafka_server_jaas.conf"
   rest_proxy_password_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/kafka/password.properties"
   datadir:
@@ -421,7 +421,7 @@ schema_registry:
   systemd_file_src: "{{systemd_base_dir}}/{{schema_registry_service_name_default}}.service"
   systemd_override: /etc/systemd/system/{{schema_registry_service_name}}.service.d/override.conf
   log4j_file_src: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/schema-registry/log4j.properties"
-  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent{% endif %}{{config_prefix}}/schema-registry/log4j.properties"
+  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}{% endif %}{{config_prefix}}/schema-registry/log4j.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/schema-registry/jaas.conf"
   password_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/schema-registry/password.properties"
 
@@ -541,7 +541,7 @@ kafka_connect:
 
   systemd_override: /etc/systemd/system/{{kafka_connect_service_name}}.service.d/override.conf
   log4j_file_src: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/kafka/connect-log4j.properties"
-  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent{% endif %}{{config_prefix}}/kafka/connect-log4j.properties"
+  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}{% endif %}{{config_prefix}}/kafka/connect-log4j.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/kafka/connect-jaas.conf"
   password_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/kafka/connect-password.properties"
 
@@ -752,7 +752,7 @@ ksql:
   systemd_file_src: "{{systemd_base_dir}}/{{ksql_service_name_default}}.service"
   systemd_override: /etc/systemd/system/{{ksql_service_name}}.service.d/override.conf
   log4j_file_src: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/ksqldb/ksqldb-log4j.properties"
-  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent{% endif %}{{config_prefix}}/ksqldb/ksqldb-log4j.properties"
+  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}{% endif %}{{config_prefix}}/ksqldb/ksqldb-log4j.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/ksql{{ 'db' if (confluent_package_version is version('5.5.0', '>=')) else '' }}/jaas.conf"
   password_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/ksql{{ 'db' if (confluent_package_version is version('5.5.0', '>=')) else '' }}/password.properties"
 
@@ -927,7 +927,7 @@ kafka_rest:
   systemd_file_src: "{{systemd_base_dir}}/{{kafka_rest_service_name_default}}.service"
   systemd_override: /etc/systemd/system/{{kafka_rest_service_name}}.service.d/override.conf
   log4j_file_src: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/kafka-rest/log4j.properties"
-  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent{% endif %}{{config_prefix}}/kafka-rest/log4j.properties"
+  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}{% endif %}{{config_prefix}}/kafka-rest/log4j.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/kafka-rest/jaas.conf"
   password_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/kafka-rest/password.properties"
 
@@ -1075,7 +1075,7 @@ control_center:
   systemd_file_src: "{{systemd_base_dir}}/{{control_center_service_name_default}}.service"
   systemd_override: /etc/systemd/system/{{control_center_service_name}}.service.d/override.conf
   log4j_file_src: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/confluent-control-center/log4j-rolling.properties"
-  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent{% endif %}{{config_prefix}}/confluent-control-center/log4j-rolling.properties"
+  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}{% endif %}{{config_prefix}}/confluent-control-center/log4j-rolling.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/confluent-control-center/jaas.conf"
   password_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{config_prefix}}/confluent-control-center/password.properties"
 
@@ -1226,7 +1226,7 @@ kafka_connect_replicator:
   systemd_file_src: "{{systemd_base_dir}}/{{kafka_connect_replicator_service_name_default}}.service"
   systemd_override: /etc/systemd/system/{{kafka_connect_replicator_service_name}}.service.d/override.conf
   log4j_file_src: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/kafka-connect-replicator/replicator-log4j.properties"
-  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent{% endif %}{{config_prefix}}/kafka-connect-replicator/replicator-log4j.properties"
+  log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}{% endif %}{{config_prefix}}/kafka-connect-replicator/replicator-log4j.properties"
 
 kafka_connect_replicator_properties:
   defaults:
