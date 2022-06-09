@@ -9,7 +9,8 @@ confluent_repo_version: "{{ confluent_package_version | regex_replace('^([0-9])\
 ssl_file_dir_final: "{{ ssl_file_dir |regex_replace('\\/$', '') }}"
 
 #### Zookeeper Variables ####
-zookeeper_service_name: "confluent-zookeeper{{installation_suffix}"
+zookeeper_service_name_default: "confluent-zookeeper"
+zookeeper_service_name: "{{zookeeper_service_name_default}}{{installation_suffix}}"
 zookeeper_main_package: "{{ 'confluent-server' if confluent_server_enabled|bool else 'confluent-kafka'}}"
 zookeeper_default_user: cp-kafka
 zookeeper_default_group: confluent
@@ -18,6 +19,7 @@ zookeeper:
   server_start_file: "{{ binary_base_path }}/bin/zookeeper-server-start"
   config_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{ zookeeper_config_prefix }}/zookeeper.properties"
   systemd_file: "{{systemd_base_dir}}/{{zookeeper_service_name}}.service"
+  systemd_file_src: "{{systemd_base_dir}}/{{zookeeper_service_name_default}}.service"
   systemd_override: /etc/systemd/system/{{zookeeper_service_name}}.service.d/override.conf
   log4j_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}/etc/kafka/zookeeper-log4j.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}/etc/kafka/zookeeper_jaas.conf"
@@ -86,7 +88,8 @@ zookeeper_final_properties: "{{ zookeeper_combined_properties | combine(zookeepe
 
 
 #### Kafka Broker Variables ####
-kafka_broker_service_name: "{{ 'confluent-server' if confluent_server_enabled|bool else 'confluent-kafka'}}{{installation_suffix}"
+kafka_broker_service_name_default: "{{ 'confluent-server' if confluent_server_enabled|bool else 'confluent-kafka'}}"
+kafka_broker_service_name: "{{kafka_broker_service_name_default}}{{installation_suffix}}"
 kafka_broker_main_package: "{{ 'confluent-server' if confluent_server_enabled|bool else 'confluent-kafka'}}"
 kafka_broker_default_user: cp-kafka
 kafka_broker_default_group: confluent
@@ -97,6 +100,8 @@ kafka_broker:
   client_config_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{ kafka_broker_config_prefix }}/client.properties"
   zookeeper_tls_client_config_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{ kafka_broker_config_prefix }}/zookeeper-tls-client.properties"
   systemd_file: "{{systemd_base_dir}}/{{kafka_broker_service_name}}.service"
+  systemd_file_src: "{{systemd_base_dir}}/{{kafka_broker_service_name_default}}.service"
+
   systemd_override: /etc/systemd/system/{{kafka_broker_service_name}}.service.d/override.conf
   log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/kafka/log4j.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}/etc/kafka/kafka_server_jaas.conf"
@@ -403,7 +408,8 @@ kafka_broker_client_properties: "{{ kafka_broker_listeners[kafka_broker_inter_br
 
 
 #### Schema Registry Variables ####
-schema_registry_service_name: "confluent-schema-registry{{installation_suffix}}"
+schema_registry_service_name_default: "confluent-schema-registry"
+schema_registry_service_name: "{{schema_registry_service_name_default}}{{installation_suffix}}"
 schema_registry_default_user: cp-schema-registry
 schema_registry_default_group: confluent
 schema_registry_default_log_dir: /var/log/confluent/schema-registry
@@ -411,6 +417,7 @@ schema_registry:
   server_start_file: "{{ binary_base_path }}/bin/schema-registry-start"
   config_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{ schema_registry_config_prefix }}/schema-registry.properties"
   systemd_file: "{{systemd_base_dir}}/{{schema_registry_service_name}}.service"
+  systemd_file_src: "{{systemd_base_dir}}/{{schema_registry_service_name_default}}.service"
   systemd_override: /etc/systemd/system/{{schema_registry_service_name}}.service.d/override.conf
   log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/schema-registry/log4j.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}/etc/schema-registry/jaas.conf"
@@ -517,7 +524,8 @@ schema_registry_final_properties: "{{ schema_registry_combined_properties | comb
 
 
 #### Kafka Connect Variables ####
-kafka_connect_default_service_name: "confluent-kafka-connect{{installation_suffix}"
+kafka_connect_default_service_name_default: "confluent-kafka-connect"
+kafka_connect_default_service_name: "{{kafka_connect_default_service_name_default}}{{installation_suffix}}"
 kafka_connect_default_config_filename: connect-distributed.properties
 kafka_connect_default_user: cp-kafka-connect
 kafka_connect_default_group: confluent
@@ -527,6 +535,8 @@ kafka_connect:
   server_start_file: "{{ binary_base_path }}/bin/connect-distributed"
   config_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{ kafka_connect_config_prefix }}/{{kafka_connect_config_filename}}"
   systemd_file: "{{systemd_base_dir}}/{{kafka_connect_service_name}}.service"
+  systemd_file_src: "{{systemd_base_dir}}/{{kafka_connect_service_name_default}}.service"
+
   systemd_override: /etc/systemd/system/{{kafka_connect_service_name}}.service.d/override.conf
   log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/kafka/connect-log4j.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}/etc/kafka/connect-jaas.conf"
@@ -726,7 +736,8 @@ kafka_connect_final_properties: "{{ kafka_connect_combined_properties | combine(
 
 
 #### KSQLDB Variables ####
-ksql_service_name: "{{(confluent_package_version is version('5.5.0', '>=')) | ternary('confluent-ksqldb' , 'confluent-ksql')}}{{installation_suffix}"
+ksql_service_name_default: "{{(confluent_package_version is version('5.5.0', '>=')) | ternary('confluent-ksqldb' , 'confluent-ksql')}}"
+ksql_service_name: "{{ksql_service_name_default}}{{installation_suffix}}"
 ksql_main_package: "{{(confluent_package_version is version('5.5.0', '>=')) | ternary('confluent-ksqldb' , 'confluent-ksql')}}"
 ksql_default_user: cp-ksql
 ksql_default_group: confluent
@@ -735,6 +746,7 @@ ksql:
   server_start_file: "{{ binary_base_path }}/bin/ksql-server-start"
   config_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{ ksql_config_prefix }}/ksql-server.properties"
   systemd_file: "{{systemd_base_dir}}/{{ksql_service_name}}.service"
+  systemd_file_src: "{{systemd_base_dir}}/{{ksql_service_name_default}}.service"
   systemd_override: /etc/systemd/system/{{ksql_service_name}}.service.d/override.conf
   log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/ksqldb/ksqldb-log4j.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}/etc/ksql{{ 'db' if (confluent_package_version is version('5.5.0', '>=')) else '' }}/jaas.conf"
@@ -899,7 +911,8 @@ ksql_final_properties: "{{ ksql_combined_properties | combine(ksql_custom_proper
 
 
 #### Kafka Rest Variables ####
-kafka_rest_service_name: "confluent-kafka-rest{{installation_suffix}"
+kafka_rest_service_name_default: "confluent-kafka-rest"
+kafka_rest_service_name: "{{kafka_rest_service_name_default}}{{installation_suffix}}"
 kafka_rest_default_user: cp-kafka-rest
 kafka_rest_default_group: confluent
 kafka_rest_default_log_dir: /var/log/confluent/kafka-rest
@@ -907,6 +920,7 @@ kafka_rest:
   server_start_file: "{{ binary_base_path }}/bin/kafka-rest-start"
   config_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{ kafka_rest_config_prefix }}/kafka-rest.properties"
   systemd_file: "{{systemd_base_dir}}/{{kafka_rest_service_name}}.service"
+  systemd_file_src: "{{systemd_base_dir}}/{{kafka_rest_service_name_default}}.service"
   systemd_override: /etc/systemd/system/{{kafka_rest_service_name}}.service.d/override.conf
   log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/kafka-rest/log4j.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}/etc/kafka-rest/jaas.conf"
@@ -1044,7 +1058,8 @@ kafka_rest_final_properties: "{{ kafka_rest_combined_properties | combine(kafka_
 
 
 #### Control Center Variables ####
-control_center_service_name: "confluent-control-center{{installation_suffix}"
+control_center_service_name_default: "confluent-control-center"
+control_center_service_name: "{{control_center_service_name_default}}{{installation_suffix}}"
 control_center_default_user: cp-control-center
 control_center_default_group: confluent
 control_center_default_log_dir: /var/log/confluent/control-center
@@ -1052,6 +1067,7 @@ control_center:
   server_start_file: "{{ binary_base_path }}/bin/control-center-start"
   config_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{ control_center_config_prefix }}/control-center-production.properties"
   systemd_file: "{{systemd_base_dir}}/{{control_center_service_name}}.service"
+  systemd_file_src: "{{systemd_base_dir}}/{{control_center_service_name_default}}.service"
   systemd_override: /etc/systemd/system/{{control_center_service_name}}.service.d/override.conf
   log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/confluent-control-center/log4j-rolling.properties"
   jaas_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}/etc/confluent-control-center/jaas.conf"
@@ -1188,7 +1204,9 @@ binary_base_path: "{{ archive_config_base_path+'/confluent-'+archive_version if 
 
 
 #### Kafka Connect Replicator Variables ####
-kafka_connect_replicator_service_name: "kafka-connect-replicator{{installation_suffix}"
+kafka_connect_replicator_service_name_default: "kafka-connect-replicator"
+
+kafka_connect_replicator_service_name: "{{kafka_connect_replicator_service_name_default}}{{installation_suffix}}"
 kafka_connect_replicator_default_user: cp-kafka-connect-replicator
 kafka_connect_replicator_default_group: confluent
 
@@ -1199,6 +1217,7 @@ kafka_connect_replicator:
   producer_config_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{ kafka_connect_replicator_config_prefix }}/kafka-connect-replicator-producer.properties"
   interceptors_config_file: "{{ archive_config_base_path if installation_method == 'archive' else '' }}{{ kafka_connect_replicator_config_prefix }}/kafka-connect-replicator-interceptors.properties"
   systemd_file: "{{systemd_base_dir}}/{{kafka_connect_replicator_service_name}}.service"
+  systemd_file_src: "{{systemd_base_dir}}/{{kafka_connect_replicator_service_name_default}}.service"
   systemd_override: /etc/systemd/system/{{kafka_connect_replicator_service_name}}.service.d/override.conf
   log4j_file: "{% if installation_method == 'archive' %}{{archive_destination_path}}/confluent-{{confluent_package_version}}{% endif %}/etc/kafka-connect-replicator/replicator-log4j.properties"
 
