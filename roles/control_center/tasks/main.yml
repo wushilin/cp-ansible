@@ -90,7 +90,7 @@
 # Copy the tarball's systemd service to the system
 - name: Copy Control Center Service from archive file to system
   copy:
-    src: "{{binary_base_path}}/lib/systemd/system/{{control_center.systemd_file|basename}}"
+    src: "{{binary_base_path}}/lib/systemd/system/{{control_center.systemd_file_src|basename}}"
     remote_src: true
     dest: "{{control_center.systemd_file}}"
     mode: 0644
