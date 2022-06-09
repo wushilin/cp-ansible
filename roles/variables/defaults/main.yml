@@ -150,8 +150,9 @@ archive_group: ""
 ### If the installation_method is 'archive' then this will be the base path for the configuration files, otherwise configuration files are in the default /etc locations. For example, configuration files may be placed in `/opt/confluent/etc` using this variable.
 archive_config_base_path: "{{ archive_destination_path }}"
 
+installation_suffix: ""
 ### The configuration prefix to use, by default /etc. Note - Only valid to customize when installation_method: archive
-config_prefix: "/etc"
+config_prefix: "/etc{{installation_suffix}}"
 
 ### Boolean to have cp-ansible download the Confluent CLI
 confluent_cli_download_enabled: "{{rbac_enabled or secrets_protection_enabled}}"
